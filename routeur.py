@@ -1,61 +1,58 @@
+import heapq
 import random
 import numpy as np
 
-# capacité maximal
+# capacité maximale
 CAPACITE_MAX = 100
-# perte maximal
+# perte maximale
 PERTE_MAX = 0.05
-# duree maximal
+# durée maximale
 T_MAX = 10000
 
-def duree_exp(lambda):
-    """ Genere une durée suivant la loi expodentiel en \"lambda\"
-        @param lambda parametre de la loi expodentiel
-    """
-    return np.random.expodential(1/lambda)
+def duree_exp(lambda_requete):
+    """ Génère une durée suivant la loi exponentielle en lambda """
+    return np.random.exponential(1 / lambda_requete)
 
 def categorie_uni(C):
-    """ Genere une categorie suivant la loi uniforme en fonction de \"C\"
-        @param C nombre de groupe ou de categorie
-    """   
-    return np.random.uniform(1, C)
+    """ Génère une catégorie suivant la loi uniforme en fonction de C """
+    return random.randint(1, C)
 
-def simul_fifo(lambda, C):
-    """ simule la file d'attente en fonction du taux d'arrivée lam
-    retourne les statistiques mesurées"""
-
-    # les variables
-    t = 0 # temps
-    n = 0 # nombre de clients à chaque date
-    echeancier = [] # contient les événements à venir
-    # On initialise l'échéancier en ajoutant un client
-    heappush(echeancier, (0, categorie_uni(C),"client"))
-    # evolution du nombre de clients au cours du temps
-    n_t = [] 
+def simul_fifo(lambda_requete, C):
+    """ Simule la file d'attente en fonction du taux d'arrivée lambda_requete """
+    # Variables
+    t = 0  # Temps actuel
+    n = 0  # Nombre de clients à chaque instant
+    echeancier = []  # Contient les événements à venir
     
-    # boucle principale
+    # On initialise l'échéancier avec l'arrivée du premier client
+    heapq.heappush(echeancier, (0, categorie_uni(C), "client"))
+    
+    # Evolution du nombre de clients au cours du temps
+    n_t = []
+    
+    # Boucle principale de simulation
     while t < T_MAX:
-        # on récupère les données à afficher
+        # On récupère les données à afficher
         n_t.append([t, n])
-        # on extrait l'événement le plus proche dans le temps
-        evt = heappop(echeancier)
-        # on met à jour la date
+        
+        # On extrait l'événement le plus proche dans le temps
+        if not echeancier:
+            break
+        
+        evt = heapq.heappop(echeancier)
         t = evt[0]
-        # on traite l'événement
-        match evt[2]:
-            case "service":
-                # un client part
-                n -= 1
-                # si il reste un client, il commence son service
-                if n > 0:
-                    heappush(echeancier, evt[1], (t + duree_exp(1), "service"))
-            case "client":
-                # on calcule la date d'arrivée du prochain client
-                heappush(echeancier, categorie_uni(C), (t + duree_exp(lam), "client"))
-                n += 1
-                # si la file était vide, on commence un service
-                if n == 1:
-                    heappush(echeancier, evt[1], (t + duree_exp(1), "service"))
-
-    # on retourne les statistiques mesurées 
+        
+        if evt[2] == "service":
+            # Un client termine son service
+            n -= 1
+            if n > 0:
+                heapq.heappush(echeancier, (t + duree_exp(1), None, "service"))
+        elif evt[2] == "client":
+            # Un nouveau client arrive
+            heapq.heappush(echeancier, (t + duree_exp(lambda_requete), categorie_uni(C), "client"))
+            n += 1
+            if n == 1:
+                heapq.heappush(echeancier, (t + duree_exp(1), None, "service"))
+    
+    # Retourne les statistiques mesurées
     return n_t
