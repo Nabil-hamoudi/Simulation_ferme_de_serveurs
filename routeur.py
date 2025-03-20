@@ -2,6 +2,9 @@ import heapq
 import random
 import numpy as np
 
+#from requetes import attribuer_type_requete
+from requetes import Requete
+
 # capacité maximale
 CAPACITE_MAX = 100
 # perte maximale
@@ -13,10 +16,6 @@ def duree_exp(lambda_requete):
     """ Génère une durée suivant la loi exponentielle en lambda """
     return np.random.exponential(1 / lambda_requete)
 
-def categorie_uni(C):
-    """ Génère une catégorie suivant la loi uniforme en fonction de C """
-    return random.randint(1, C)
-
 def simul_fifo(lambda_requete, C):
     """ Simule la file d'attente en fonction du taux d'arrivée lambda_requete """
     # Variables
@@ -25,7 +24,7 @@ def simul_fifo(lambda_requete, C):
     echeancier = []  # Contient les événements à venir
     
     # On initialise l'échéancier avec l'arrivée du premier client
-    heapq.heappush(echeancier, (0, categorie_uni(C), "client"))
+    heapq.heappush(echeancier, (0, Requete(C), "client"))
     
     # Evolution du nombre de clients au cours du temps
     n_t = []
@@ -49,7 +48,7 @@ def simul_fifo(lambda_requete, C):
                 heapq.heappush(echeancier, (t + duree_exp(1), None, "service"))
         elif evt[2] == "client":
             # Un nouveau client arrive
-            heapq.heappush(echeancier, (t + duree_exp(lambda_requete), categorie_uni(C), "client"))
+            heapq.heappush(echeancier, (t + duree_exp(lambda_requete), Requete(C), "client"))
             n += 1
             if n == 1:
                 heapq.heappush(echeancier, (t + duree_exp(1), None, "service"))
