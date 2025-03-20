@@ -16,16 +16,18 @@ def main():
         raise ValueError("C doit être un des éléments suivants: {1, 2, 3, 6}.")
     
     # Initialisation des serveurs et des groupes
+    liste_groupes = []
     for categorie in range(1, C + 1):
         groupe = Groupe(C, categorie)
+        liste_groupes.append(groupe)
         groupe.afficher_details()
 
     # Lancer la simulation
-    stats = simul_fifo(lambda_requete, C)
+    stats = simul_fifo(lambda_requete, C, liste_groupes)
 
     taux_perte = 0
     # Affichage des statistiques avec suivi des groupes et attribution des requêtes
 
-    
+
 if __name__ == "__main__":
     main()

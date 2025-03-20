@@ -11,6 +11,7 @@ class Serveur:
         """ Ajoute une requête au serveur si celui-ci est libre. """
         if self.est_occupe():
             raise Exception("Le serveur est déjà occupé.")
+        print("votre requête est prise en charge")
         self.requete = requete
     
     def liberer(self):

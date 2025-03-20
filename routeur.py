@@ -16,7 +16,7 @@ def duree_exp(lambda_requete):
     """ Génère une durée suivant la loi exponentielle en lambda """
     return np.random.exponential(1 / lambda_requete)
 
-def simul_fifo(lambda_requete, C):
+def simul_fifo(lambda_requete, C, liste_groupes):
     """ Simule la file d'attente en fonction du taux d'arrivée lambda_requete """
     # Variables
     t = 0  # Temps actuel
@@ -47,7 +47,12 @@ def simul_fifo(lambda_requete, C):
             if n > 0:
                 heapq.heappush(echeancier, (t + duree_exp(1), None, "service"))
         elif evt[2] == "client":
-            print(evt[1])
+            # recherche du groupe correspondant à la requête, puis d'un serveur disponible dans ce groupe
+            for groupe in liste_groupes:
+                if groupe.categorie == evt[1].categorie:
+                    for serveur in groupe.serveurs:
+                        if serveur.est_occupe() == False:
+                            serveur.ajouter_requete(evt[1])
             # Un nouveau client arrive
             heapq.heappush(echeancier, (t + duree_exp(lambda_requete), Requete(C), "client"))
             n += 1
