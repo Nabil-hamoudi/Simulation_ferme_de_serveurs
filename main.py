@@ -2,7 +2,6 @@ import heapq
 import numpy as np
 from routeur import simul_fifo, duree_exp
 from serveurs import liste_serveurs
-#from requetes import attribuer_type_requete
 import serveurs
 
 # Paramètres de simulation
