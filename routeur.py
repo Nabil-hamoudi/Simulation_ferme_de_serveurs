@@ -10,7 +10,7 @@ CAPACITE_MAX = 100
 # perte maximale
 PERTE_MAX = 0.05
 # durée maximale
-T_MAX = 10000
+T_MAX = 100
 
 def duree_exp(lambda_requete):
     """ Génère une durée suivant la loi exponentielle en lambda """
@@ -47,6 +47,7 @@ def simul_fifo(lambda_requete, C):
             if n > 0:
                 heapq.heappush(echeancier, (t + duree_exp(1), None, "service"))
         elif evt[2] == "client":
+            print(evt[1])
             # Un nouveau client arrive
             heapq.heappush(echeancier, (t + duree_exp(lambda_requete), Requete(C), "client"))
             n += 1
