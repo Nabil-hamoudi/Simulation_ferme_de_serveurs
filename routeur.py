@@ -11,8 +11,6 @@ EXPODEN_C = {1: 4/20, 2: 7/20, 3: 10 / 20, 6: 14 / 20}
 CAPACITE_MAX = 100
 # perte maximale
 PERTE_MAX = 0.05
-# durée maximale
-T_MAX = 100
 # nombre de serveurs
 NBR_SERVEURS = 12
 # Taux de rejet maximum
