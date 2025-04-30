@@ -43,6 +43,7 @@ def simul_fifo(lambda_requete, C, T_MAX):
     type_serv = None  # dis quel type de serveur est le prochain
     n_tot = 0  # nombre client total
     n_drop = 0  # Nombre de clients drop
+    routeur_dispo = True # dis si le routeur est dispo
     echeancier = []  # Contient les événements à venir
     # On initialise l'échéancier avec l'arrivée du premier client
     heapq.heappush(echeancier, (0, None, "client"))
@@ -66,17 +67,18 @@ def simul_fifo(lambda_requete, C, T_MAX):
             serveurs[evt[1]] -= 1
         elif evt[2] == "client":
             # regarde si la file est pleine
-            if n < 100:
+            n_tot += 1
+            if n < CAPACITE_MAX:
+                n += 1
                 # verifie que routeur ne soit pas bloque
                 if type_serv is None:
                     type_serv = typeserveur(C)
-                if serveurs[type_serv] < nombre_serveurs_type:
+                if (serveurs[type_serv] < nombre_serveurs_type) and routeur_dispo:
                     serveurs[type_serv] += 1
                     heapq.heappush(
                         echeancier, (t + temp_routeur, type_serv, "routeur"))
                     type_serv = None
-                n += 1
-                n_tot += 1
+                    routeur_dispo = False
             else:
                 n_drop += 1
             # Un nouveau client arrive
@@ -84,6 +86,7 @@ def simul_fifo(lambda_requete, C, T_MAX):
                 echeancier, (t + duree_exp(lambda_requete), None, "client"))
         elif evt[2] == "routeur":
             n -= 1
+            routeur_dispo = True
             heapq.heappush(
                 echeancier, (t + duree_exp(EXPODEN_C[C]), evt[1], "service"))
             if n > 0:
@@ -91,11 +94,12 @@ def simul_fifo(lambda_requete, C, T_MAX):
                 # verifie que routeur ne soit pas bloque
                 if type_serv is None:
                     type_serv = typeserveur(C)
-                if serveurs[type_serv] < nombre_serveurs_type:
+                if (serveurs[type_serv] < nombre_serveurs_type) and routeur_dispo:
                     serveurs[type_serv] += 1
                     heapq.heappush(
                         echeancier, (t + temp_routeur, type_serv, "routeur"))
                     type_serv = None
+                    routeur_dispo = False
 
         taux_rejet = n_drop / n_tot
         if taux_rejet > TAUX_REJET_MAX:
