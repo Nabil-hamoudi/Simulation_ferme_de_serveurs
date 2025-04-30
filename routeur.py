@@ -25,7 +25,7 @@ def typeserveur(C):
     return np.random.randint(0, C)
 
 
-def simul_fifo(lambda_requete, C):
+def simul_fifo(lambda_requete, C, T_MAX):
     """ Simule la file d'attente en fonction du taux d'arrivée lambda_requete """
     if C not in C_VAL:
         return None
