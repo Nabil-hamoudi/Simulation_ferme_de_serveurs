@@ -9,8 +9,6 @@ EXPODEN_C = {1: 4/20, 2: 7/20, 3: 10 / 20, 6: 14 / 20}
 
 # capacité maximale
 CAPACITE_MAX = 100
-# perte maximale
-PERTE_MAX = 0.05
 # nombre de serveurs
 NBR_SERVEURS = 12
 # Taux de rejet maximum
@@ -100,7 +98,7 @@ def simul_fifo(lambda_requete, C):
                     type_serv = None
 
         taux_rejet = n_drop / n_tot
-        if taux_rejet > 0.05:
+        if taux_rejet > TAUX_REJET_MAX:
             t = T_MAX
 
     # Retourne les statistiques mesurées
