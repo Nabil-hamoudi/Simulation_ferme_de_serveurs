@@ -1,5 +1,6 @@
 import heapq
 import numpy as np
+import sys
 
 # Valeur C accepter
 C_VAL = (1, 2, 3, 6)
@@ -23,6 +24,19 @@ def duree_exp(lambda_requete):
 def typeserveur(C):
     """Genere une valeur correspondant au type de serveur"""
     return np.random.randint(0, C)
+
+
+def tempmoyenclient(depart, arrive):
+    """Cacul le temp moyen d'attente avec les arrivé et depart client"""
+    temp_moyen = 0
+    for i in arrive:
+        mini = sys.maxsize
+        for j in depart:
+            if j >= i:
+                mini = j
+        depart.remove(mini)
+        temp_moyen += (mini - i)
+    return temp_moyen * (1/len(arrive))
 
 
 def simul_fifo(lambda_requete, C, T_MAX):
@@ -51,13 +65,16 @@ def simul_fifo(lambda_requete, C, T_MAX):
     n_tot += 1
     # Evolution du nombre de clients au cours du temps
     n_t = []
-
+    # stock les arrivé et sortie client pour temp moyen
+    arrive = []
+    depart = []
+    # dis si la simulation est rejetter car le taux de rejet max depasser
+    rejeter = False
 
     # Boucle principale de simulation
     while t < T_MAX:
         # On récupère les données à afficher
         n_t.append([t, n])
-
 
         # On extrait l'événement le plus proche dans le temps
         if not echeancier:
@@ -67,11 +84,13 @@ def simul_fifo(lambda_requete, C, T_MAX):
         if evt[2] == "service":
             # Un client termine son service
             serveurs[evt[1]] -= 1
+            depart.append(t)
         elif evt[2] == "client":
             # regarde si la file est pleine
             n_tot += 1
             if n < CAPACITE_MAX:
                 n += 1
+                arrive.append(t)
                 # verifie que routeur ne soit pas bloque
                 if type_serv is None:
                     type_serv = typeserveur(C)
@@ -106,6 +125,7 @@ def simul_fifo(lambda_requete, C, T_MAX):
         taux_rejet = n_drop / n_tot
         if taux_rejet > TAUX_REJET_MAX:
             t = T_MAX
+            rejeter = True
 
     # Retourne les statistiques mesurées
-    return n_t
+    return {"nombre_client et temp" : n_t, "temp_moyen_attente_client" : tempmoyenclient(depart, arrive), "rejeter" : rejeter}
