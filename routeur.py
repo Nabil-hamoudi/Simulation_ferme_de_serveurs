@@ -123,9 +123,6 @@ def simul_fifo(lambda_requete, C, T_MAX):
                     routeur_dispo = False
 
         taux_rejet = n_drop / n_tot
-        if taux_rejet > TAUX_REJET_MAX:
-            t = T_MAX
-            rejeter = True
 
     # Retourne les statistiques mesurées
-    return {"nombre_client et temp" : n_t, "temp_moyen_attente_client" : tempmoyenclient(depart, arrive), "rejeter" : rejeter}
+    return {"nombre_client et temp" : n_t, "temp_moyen_attente_client" : tempmoyenclient(depart, arrive), "taux_rejet" : taux_rejet}
