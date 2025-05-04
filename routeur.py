@@ -1,6 +1,5 @@
 import heapq
 import numpy as np
-import sys
 
 # Valeur C accepter
 C_VAL = (1, 2, 3, 6)
@@ -30,12 +29,13 @@ def tempmoyenclient(depart, arrive):
     """Cacul le temp moyen d'attente avec les arrivé et depart client"""
     temp_moyen = 0
     for i in arrive:
-        mini = sys.maxsize
-        for j in depart:
-            if j >= i:
-                mini = j
-        depart.remove(mini)
-        temp_moyen += (mini - i)
+        mini = 0
+        for j in range(len(depart)):
+            if depart[j] >= i:
+                if depart[mini] > depart[j]:
+                    mini = j
+        temp_moyen += (depart[mini] - i)
+        del depart[mini]
     return temp_moyen * (1/len(arrive))
 
 
