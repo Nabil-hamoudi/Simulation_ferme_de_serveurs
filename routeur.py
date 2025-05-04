@@ -34,6 +34,7 @@ def tempmoyenclient(depart, arrive):
         for j in range(0, len(depart)):
             if depart[j] >= i:
                 temp_moyen += min(depart[j:]) - i
+                del depart[j]
                 break
     return temp_moyen * (1/len(arrive))
 
