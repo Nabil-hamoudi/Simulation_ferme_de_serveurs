@@ -123,4 +123,4 @@ def simul_fifo(lambda_requete, C, T_MAX):
                     routeur_dispo = False
 
     # Retourne les statistiques mesurées
-    return {"nombre_client et temp" : n_t, "temp_moyen_attente_client" : tempmoyenclient(depart, arrive), "taux_rejet" : n_drop / n_tot}
+    return {"temp_moyen_attente_client" : tempmoyenclient(depart, arrive), "taux_rejet" : n_drop / n_tot}
