@@ -52,10 +52,12 @@ def simul_fifo(lambda_requete, C, T_MAX):
     # Evolution du nombre de clients au cours du temps
     n_t = []
 
+
     # Boucle principale de simulation
     while t < T_MAX:
         # On récupère les données à afficher
         n_t.append([t, n])
+
 
         # On extrait l'événement le plus proche dans le temps
         if not echeancier:
