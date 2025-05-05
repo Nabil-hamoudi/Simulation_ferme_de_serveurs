@@ -65,10 +65,10 @@ def simul_fifo(lambda_requete, C, T_MAX):
     n_tot += 1
     # Evolution du nombre de clients au cours du temps
     n_t = []
-    # stock les arrivé et sortie client pour temp moyen
+    # stock les arrivé et sortie client pour temps moyen
     arrive = []
     depart = []
-    # dis si la simulation est rejetter car le taux de rejet max depasser
+    # dis si la simulation est rejettée car le taux de rejet max depassé
     rejeter = False
 
     # Boucle principale de simulation
